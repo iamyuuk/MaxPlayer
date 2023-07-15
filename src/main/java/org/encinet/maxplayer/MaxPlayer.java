@@ -44,7 +44,8 @@ public final class MaxPlayer extends JavaPlugin implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) { check(); }
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        sender.sendMessage("服务器的最高在线人数是：" + maxOnlinePlayers);
+        int currentMaxPlayers = config.getInt("maxOnlinePlayers");
+        sender.sendMessage("当前最高在线人数是：" + currentMaxPlayers);
         return true;
     }
     private void check() {
