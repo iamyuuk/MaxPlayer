@@ -17,7 +17,6 @@ import java.io.IOException;
 public final class MaxPlayer extends JavaPlugin implements Listener {
     private File configFile;
     private YamlConfiguration config;
-    private int maxOnlinePlayers = 0;
     @Override
     public void onEnable() {
         configFile = new File(getDataFolder(), "config.yml");
@@ -25,19 +24,9 @@ public final class MaxPlayer extends JavaPlugin implements Listener {
         if (!config.contains("maxOnlinePlayers")) {
             config.set("maxOnlinePlayers", 0);
         }
-        maxOnlinePlayers = config.getInt("maxOnlinePlayers");
         getServer().getPluginManager().registerEvents(this, this);
         getLogger().info("插件已开启 这是一个用来记录服务器最大在线人数的插件");
-        int onlinePlayers = Bukkit.getServer().getOnlinePlayers().size();
-        if (onlinePlayers > maxOnlinePlayers) {
-            maxOnlinePlayers = onlinePlayers;
-            config.set("maxOnlinePlayers", maxOnlinePlayers);
-            try {
-                config.save(configFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        check();
     }
     @Override
     public void onDisable() {
@@ -45,6 +34,19 @@ public final class MaxPlayer extends JavaPlugin implements Listener {
     }
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+        check();
+    }
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String label, String[] args) {
+        if (command.getName().equalsIgnoreCase("maxplayers")) {
+            int currentMaxPlayers = config.getInt("maxOnlinePlayers");
+            sender.sendMessage("服务器的最高在线人数是：" + currentMaxPlayers);
+            return true;
+        }
+        return false;
+    }
+    private void check() {
+        int maxOnlinePlayers = config.getInt("maxOnlinePlayers");
         int onlinePlayers = Bukkit.getServer().getOnlinePlayers().size();
         if (onlinePlayers > maxOnlinePlayers) {
             maxOnlinePlayers = onlinePlayers;
@@ -59,14 +61,5 @@ public final class MaxPlayer extends JavaPlugin implements Listener {
                 player.sendMessage("恭喜！新的最高在线人数" + maxOnlinePlayers);
             }
         }
-    }
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("maxplayers")) {
-            int currentMaxPlayers = config.getInt("maxOnlinePlayers");
-            sender.sendMessage("服务器的最高在线人数是：" + currentMaxPlayers);
-            return true;
-        }
-        return false;
     }
 }
