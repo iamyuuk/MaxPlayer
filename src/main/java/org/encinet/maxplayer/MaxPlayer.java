@@ -28,7 +28,16 @@ public final class MaxPlayer extends JavaPlugin implements Listener {
         maxOnlinePlayers = config.getInt("maxOnlinePlayers");
         getServer().getPluginManager().registerEvents(this, this);
         getLogger().info("插件已开启 这是一个用来记录服务器最大在线人数的插件");
-
+        int onlinePlayers = Bukkit.getServer().getOnlinePlayers().size();
+        if (onlinePlayers > maxOnlinePlayers) {
+            maxOnlinePlayers = onlinePlayers;
+            config.set("maxOnlinePlayers", maxOnlinePlayers);
+            try {
+                config.save(configFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
     @Override
     public void onDisable() {
