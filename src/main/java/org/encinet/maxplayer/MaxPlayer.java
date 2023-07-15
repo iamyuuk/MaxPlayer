@@ -17,6 +17,7 @@ public final class MaxPlayer extends JavaPlugin implements Listener {
     private File configFile;
     private YamlConfiguration config;
     private int maxOnlinePlayers;
+    private boolean edit;
     @Override
     public void onEnable() {
         configFile = new File(getDataFolder(), "config.yml");
@@ -44,14 +45,14 @@ public final class MaxPlayer extends JavaPlugin implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) { check(); }
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        int currentMaxPlayers = config.getInt("maxOnlinePlayers");
-        sender.sendMessage("当前最高在线人数是：" + currentMaxPlayers);
+        sender.sendMessage("当前最高在线人数是：" + (edit ? maxOnlinePlayers : config.getInt("maxOnlinePlayers")));
         return true;
     }
     private void check() {
         int onlinePlayers = Bukkit.getServer().getOnlinePlayers().size();
         if (onlinePlayers > maxOnlinePlayers) {
             maxOnlinePlayers = onlinePlayers;
+            edit = true;
             for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                 player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
                 player.sendMessage("恭喜！新的最高在线人数" + maxOnlinePlayers);
