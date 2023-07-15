@@ -1,8 +1,10 @@
 package org.encinet.maxplayer;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -49,7 +51,10 @@ public final class MaxPlayer extends JavaPlugin implements Listener {
         int onlinePlayers = Bukkit.getServer().getOnlinePlayers().size();
         if (onlinePlayers > maxOnlinePlayers) {
             maxOnlinePlayers = onlinePlayers;
-            Bukkit.getServer().broadcastMessage("恭喜！新的最高在线人数" + maxOnlinePlayers);
+            for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
+                player.sendMessage("恭喜！新的最高在线人数" + maxOnlinePlayers);
+            }
         }
     }
 }
