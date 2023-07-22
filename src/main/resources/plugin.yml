@@ -5,4 +5,4 @@ api-version: '1.20'
 commands:
   maxplayers:
     description: 查询最高在线人数
-    usage: /maxplayers
+    usage: /maxplayer
