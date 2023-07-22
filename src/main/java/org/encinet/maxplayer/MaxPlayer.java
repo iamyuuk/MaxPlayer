@@ -23,7 +23,8 @@ public final class MaxPlayer extends JavaPlugin implements Listener {
     public void onEnable() {
         loadPlayerCount();
         getServer().getPluginManager().registerEvents(this, this);
-        Objects.requireNonNull(getCommand("/maxplayer")).setExecutor(this);
+        Objects.requireNonNull(getCommand("maxplayer")).setExecutor(this);
+        check();
     }
 
     @Override
@@ -57,6 +58,16 @@ public final class MaxPlayer extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+     check();
+    }
+
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String label, String[] args) {
+        sender.sendMessage(ChatColor.GREEN + "当前玩家最高数: " + maxPlayerCount);
+        return true;
+    }
+
+    private void check() {
         int currentPlayerCount = Bukkit.getServer().getOnlinePlayers().size();
 
         if (currentPlayerCount > maxPlayerCount) {
@@ -65,12 +76,6 @@ public final class MaxPlayer extends JavaPlugin implements Listener {
 
             Bukkit.broadcastMessage(ChatColor.GOLD + "服务器玩家数突破新高！当前玩家数: " + currentPlayerCount);
         }
-    }
-
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String label, String[] args) {
-        sender.sendMessage(ChatColor.GREEN + "当前玩家最高数: " + maxPlayerCount);
-        return true;
     }
 
 }
